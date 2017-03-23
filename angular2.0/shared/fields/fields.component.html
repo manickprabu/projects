@@ -1,0 +1,26 @@
+<div [formGroup]="formGroup">
+
+  <div class="form-group" *ngFor="let field of fieldData">
+
+    <label for="{{ field.name }}">{{ field.label }}:</label>
+
+    <div [ngSwitch]="field.type">
+
+      <input *ngSwitchCase="'text'" class="form-control" type="text" formControlName="{{ field.name }}" placeholder="{{ field.label }}">
+
+      <div class="form-group" *ngSwitchCase="'radio'">
+        <div class="form-check" *ngFor="let option of field.options">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" formControlName="{{ field.name }}" name="{{ field.name }}" value="{{ option }}">
+            {{ option }}
+          </label>
+        </div>
+      </div>
+
+      <input *ngSwitchDefault class="form-control" type="text" formControlName="{{ field.name }}">
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,17 @@
+
+<div class="table-responsive">
+
+	<table st-table="topCountryFiltered"
+           st-safe-src="topCountry"
+           class="table table-bordered table-hover">
+		<tr>
+			<th st-sort="country">Country</th>
+			<th st-sort="distribution">Distribution</th>
+		</tr>
+		<tr ng-repeat="country in topCountryFiltered  | orderBy:'-percentage'"  country-data>
+			<td>{{ getCountry(country.country) }}</td> 
+			<td class="text-center">{{country.percentage}}%</td>
+		</tr>
+	</table>
+
+</div>

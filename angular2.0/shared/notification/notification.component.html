@@ -1,0 +1,9 @@
+<div *ngIf="message">
+  <div [class]="getClass()" role="alert">
+    <p *ngIf="message.title">
+    <strong>{{message.title}}</strong>
+    </p>
+    <span id="messageId">{{message.message}}</span>
+  </div>
+
+</div>

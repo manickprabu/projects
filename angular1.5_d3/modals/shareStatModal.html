@@ -1,0 +1,31 @@
+<div clipboard>
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="$dismiss()" aria-label="Close">
+        <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title text-uppercase">Share campaign statistics</h4>
+    </div>
+
+    <div id="page-loader" class="fade in" ng-hide="shareLink">
+        <span class="spinner"></span>
+    </div>
+
+    <div class="modal-body">
+        <p>To share the statisctics dashboard with others, simply copy the link below.</p>
+        <p class="input-group">
+            <input type="text" ng-model="shareLink" class="form-control"
+                   readonly clipboard-source style="cursor:text;opacity:1">
+            <span class="input-group-btn">
+                <button class="btn btn-default" ng-disabled="!shareLink"
+                        type="button"
+                        clipboard-button>Copy link</button>
+            </span>
+        </p>
+        <p>Anyone with the link will be able to view the statistics for all blipps in this campaign.</p>
+    </div>
+
+    <div class="modal-footer">
+        <div ng-show="clipboard.success" class="pull-left alert alert-success p-10 m-0">The link has been copied to your clipboard!</div>
+        <div ng-show="clipboard.error" class="pull-left alert alert-error p-10 m-0">Error copying link, please use Ctrl+C or Command+C to copy.</div>
+        <button class="btn btn-default" ng-click="$dismiss()">Done</button>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<table st-table="interactionBlippFiltered"
+       st-safe-src="interactionBlipp" fixed-header 
+       class="table table-hover scroll" >
+    <thead ng-show="interactionBlipp.length>0" >
+		<tr>
+            <th >{{headerLabel.Key}}</th>
+			<th st-sort="Label" >{{headerLabel.Label}}</th>
+			<th st-sort="Value" class="text-center">{{headerLabel.Value}}</th>
+            <th st-sort="Percentage" class="text-center">{{headerLabel.Percentage}}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="blipp in interactionBlippFiltered | orderBy:'-Value'" id="anchor{{blipp.Id}}"
+            ng-mouseover="onMouseover(blipp)" ng-click="loadBlippStats(blipp)"
+            ng-mouseleave="onMouseleave(blipp)"
+            ng-class="(blipp.Id == blippHover.Id) ? 'highlight' : '' ">
+            <td style="color:{{blipp.Color}};"><i class="fa fa-circle"></i></td>
+			<td class="word_wrap" ng-class="(clickable) ? 'clickable-element' : ''">{{ blipp.Label }}</td>
+			<td ng-class="(clickable) ? 'clickable-element' : ''" class="text-center">{{blipp.Value | number}}</td>
+            <td ng-class="(clickable) ? 'clickable-element' : ''" class="text-center">{{blipp.Percentage}}%</td>
+		</tr>
+	</tbody>
+</table>

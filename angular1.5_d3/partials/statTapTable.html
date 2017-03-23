@@ -1,0 +1,19 @@
+
+<table  st-table="tapFiltered"
+        st-safe-src="taps" fixed-header
+        class="table table-hover scroll" >
+    <thead >
+        <tr>
+            <th st-sort="Name" >Button name</th>
+            <th st-sort="Value" class="text-right">Total taps-thoughs</th>
+            <th st-sort="Percentage" class="text-right">Tap-through rate</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="tap in tapFiltered | orderBy:'-interaction'" ts-repeat>
+            <td class="text-ellipsis">{{tap.Name || 'Unknown'}}</td>
+            <td class="text-right">{{tap.Value }}</td>
+            <td class="text-right">{{tap.Percentage }}%</td>
+        </tr>
+    </tbody>
+</table> 

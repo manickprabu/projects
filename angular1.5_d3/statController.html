@@ -1,0 +1,157 @@
+<div class="panel panel-inverse">
+    
+    <header class="row panel-heading">
+        <h1 class="col-md-6 text-ellipsis">{{title || '…'}}</h1>
+        <ol class="breadcrumbs col-md-6 pull-right hidden-xs text-ellipsis"
+            ng-if="!currentUser.isGuest">
+            <li><a ng-href="/dashboard/">Home</a></li>
+            <li><a ng-href="{{campaign|listUrl}}">{{(campaign|listTitle) || '…'}}</a></li>
+            <li><a ng-href="{{campaign|url}}">{{campaign.Name || '…'}}</a></li>
+            <li ng-show="blipp"><a ng-href="{{blipp|url}}">{{blipp.Name || '…'}}</a></li>
+            <li>Stats</li>
+        </ol>
+    </header>
+
+    <!-- Filter controls -->
+    <div class="panel-body stats bg-gray" > 
+        <div class="row info" >
+            <div class="col-md-3" >
+                <select class="form-control blipp-selector"
+                        ng-options="item.Name for item in publishedBlipps track by item.Id"
+                        ng-model="blipp" ng-change="switchBlipp(blipp)" ng-disabled="!publishedBlipps.length">
+                     <option value="">{{ campaign.Blipps.length ? 'All Blipps' : 'Loading blipps…' }}</option>
+                </select>
+            </div> 
+ 
+            <div class=" col-md-3" ng-controller="StatsDateSelectorCtrl">
+                <i class="fa fa-calendar date-selector-icon"></i>
+                <input type="text" class="form-control date-selector" id="daterange" ng-enter="onEnter()" placeholder="Start date - End date" ng-disabled="!ready" />
+            </div>
+
+            <div class="col-md-3" ng-controller="StatsGMTCtrl" ng-show="show">
+                <select class="form-control" ng-options="item.name for item in gmt track by item.id" ng-model="selected">
+                    <option value="">Select GMT</option>
+                </select>
+            </div>
+
+            <div class="col-md-3 pull-right" >
+                <div class="pull-right">
+                    <button type="button btn-inverse" class="btn btn-blippar" 
+                        tooltip="Share campaign statistics" 
+                        ng-controller="StatsShareCtrl" ng-show="campaign && btn.show" ng-click="btn.action()">
+                        <i class="fa fa-slideshare"></i> 
+                    </button>
+
+                    <button type="button btn-inverse" class="btn btn-blippar" tooltip="Download.csv" ng-controller="StatsDownloadCtrl"
+                            ng-show="btn.show" ng-click="btn.action()"> 
+                        <i class="fa fa-download"></i> 
+                    </button>
+                </div>
+            </div> 
+        </div>
+
+        <!-- Stat report  --> 
+        <div class="row tools" >
+            <div class="col-md-3">
+                <div>Total interactions</div>
+                <div class="text-ellipsis">
+                    <i class="stat-icon icon-interaction"></i>
+                    <span class="interaction" stats-interaction="totalInteraction | number"></span>
+                    <span class="spinner" ng-show="entityData.loading"></span>
+                </div>
+            </div>
+            <div class="col-md-3"> 
+                <div>Total unique users</div>
+                <div class="text-ellipsis">
+                    <i class="stat-icon icon-unique-user"></i>
+                    <span class="interaction" stats-interaction="totalUsers | number"></span>
+                    <span class="spinner" ng-show="entityData.loading"></span>
+                </div>
+            </div>
+            <div class="col-md-3"> 
+                <div>Average interactions per user</div>
+                <div class="text-ellipsis">
+                    <i class="stat-icon icon-per-user"></i>
+                    <span class="interaction" stats-interaction="averageUserInteraction"></span>
+                    <span class="spinner" ng-show="entityData.loading"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-widget">
+            <panel header="{{header}}" ng-controller="StatInteractionCtrl" 
+                    tips="{{tips}}">
+                <div class="row tabbar">
+                    <div class="col-xs-3 legends"></div>
+                    <div class="col-xs-6 hidden-xs text-center">
+                        <i class="fa fa-info-circle"></i>
+                         Hold down <b>shift</b> to pan and zoom the chart
+                    </div>
+                    <div class="col-xs-3 pull-right">
+                        <div class="btn-group btn-group-s pull-right" >
+                            <button type="button" class="btn btn-default" ng-repeat="tab in tabs"
+                                    ng-class="{'selected' : type == tab.name}" 
+                                    tooltip="{{tab.name}}" tooltip-append-to-body="true" ng-disabled="loading" 
+                                    ng-click="update( tab.name )" >
+                                <i class="fa {{tab.icon}}"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <d3-line-chart maximize="maximize" data="data" type="type" ></d3-line-chart>
+            </panel>
+
+            <panel header="Location of user interactions" class="no-padding" ng-controller="StatGoogleMapCtrl"
+                    tips="Location of interactions for users who have enabled GPS location services for Blippar.">
+                <div class="google-map" google-map maximize="maximize" 
+                    latitude="54.7317862" longitude="7.2245906" data="locations"></div>
+            </panel>
+
+            <panel header="Interactions per blipp" ng-controller="StatCampaignBreakdownCtrl" ng-show="show"
+                    tips="Breakdown of interactions for each blipp in the campaign, and percentage of total campaign interactions">
+                <div class="row pull-height" ng-hide="error">
+                    <div class="col-md-5 pull-height">
+                        <d3-doughnut-chart data="data" mouseleave="mouseleave" mouseover="mouseover"    
+                            name="name" maximize="maximize"> </d3-doughnut-chart>
+                    </div>
+                    <div class="col-md-7 pull-height" maximize="maximize" 
+                        ng-include="'/core/components/stats/partials/statInteractionTable.html'">
+                    </div>
+                </div>
+            </panel>
+
+            <panel header="Marker breakdown" ng-controller="StatMarkerBreakdownCtrl" ng-show="show"
+                    tips="Breakdown of interactions for each markers in the blipp, and percentage of total blipp interactions">
+                <div class="row pull-height" ng-hide="error">
+                    <div class="col-md-5 pull-height">
+                        <d3-doughnut-chart data="data" mouseleave="mouseleave" mouseover="mouseover"    
+                            name="name" maximize="maximize"> </d3-doughnut-chart>
+                    </div>
+                    <div class="col-md-7 pull-height" maximize="maximize" 
+                        ng-include="'/core/components/stats/partials/statInteractionTable.html'">
+                    </div>
+                </div>
+            </panel>
+
+            <!-- TWO COLUMN -->
+            <div class="row">
+                <div class="col-md-7">
+                    <panel header="Button taps" ng-controller="StatsTapThroughCtrl" ng-show="false" 
+                            tips="Total number of taps on each button. A tap is when a user presses one of the main menu buttons in the blipp">
+                        <div class="pull-height" maximize="maximize" ng-include="'/core/components/stats/partials/statTapTable.html'" ></div>
+                    </panel>
+                </div>
+                <div class="col-md-5">
+                    <panel header="Total tap through rate" class="no-padding" ng-controller="StatTotalTapThroughCtrl" ng-show="false" tips="Total number of taps divided by total number of interactions">
+                        <div class="pull-height" maximize="maximize" ng-include="'/core/components/stats/partials/totalTapThrough.html'"></div>
+                    </panel>
+                </div>
+            </div>
+
+        </div>
+        <!-- End of stats-widget -->
+
+    </div>
+    <!-- End of Panel -->
+
+</div>

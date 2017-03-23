@@ -1,0 +1,23 @@
+
+<div class="stat-tap-through pull-height">
+    <div class="row1">
+        <div class="pull-height pull-left">
+            <div class="pull-right col">
+                <i class="stat-icon icon-tap-interaction"></i>
+                <span class="success points">{{tap.userInteraction | number}}</span>
+                <span class="name text-uppercase">Total user interactions</span>
+            </div>
+        </div>
+        <div class="pull-height pull-right">
+            <div class="col">
+                <i class="stat-icon icon-tap-button-taps"></i>
+                <span class="success points">{{tap.buttonTaps | number}}</span>
+                <span class="name text-uppercase">Total number of taps</span>
+            </div>
+        </div>
+    </div>
+    <div class="text-center row2 ">
+        <span class="points">{{tap.tapRate}}%</span>
+        <span class="name text-uppercase">Tap through rate</span>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="col-xs-11">
+
+    <h1>File upload</h1>
+
+    <app-notification [message]="status"></app-notification>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit($event)">
+
+      <div class="form-group">
+        <label class="uploader" ondragover="return false;"
+            [class.loaded]="loaded" 
+            [style.outlineColor]="dragging ? activeColor : baseColor"
+            (dragenter)="handleDragEnter()"
+            (dragleave)="handleDragLeave()"
+            (drop)="handleDrop($event)">
+            
+            <i class="icon icon-upload" 
+                [style.color]="dragging 
+                    ? ((imageSrc.length > 0) ? overlayColor : activeColor)
+                    : ((imageSrc.length > 0) ? overlayColor : baseColor)"></i>
+            
+                    
+            <input type="file" name="files[]" id="file" class="form-control" data-multiple-caption="{count} files selected" multiple="" (change)="onFileChange($event)" >
+
+        </label>     
+        </div>
+      <div *ngIf="isFileSelect">
+        <h4 class="row-title">Files to upload</h4>
+        <app-list [dataset]='files'></app-list>
+      </div>
+      <div class="form-group">
+        <label for="">File Type:</label><br>
+        <input class="form-control" type="text" formControlName="fileType" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="">Document Type:</label><br>
+        <select class="form-control" formControlName="documentType" (change)="onDocTypeChange($event)">
+      <option value="">-- Please Select --</option>
+      <option *ngFor="let type of docTypes" [value]="type">{{ type }}</option>
+    </select>
+      </div>
+
+      <div [hidden]="!form.controls.documentType.valid">
+        <h2>Meta Data</h2>
+        <app-fields [fieldData]="metaDataFieldsList" [formGroup]="metaDataFormGroup"></app-fields>
+      </div>
+
+      <div class="form-group">
+        <button class="btn btn-primary col-xs-12 col-sm-2" type="submit" [disabled]="!form.valid">Submit</button>
+      </div>
+
+    </form>
+  </div>
+</div>
