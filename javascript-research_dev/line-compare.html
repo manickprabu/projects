@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>My First Page</h2>
+
+<p id="demo"></p>
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js" ></script>
+ -->
+<script type="text/javascript">
+
+    //==== split line by word
+
+
+
+    var line = '<span class="fmg-indent-1"><strong>(a)</strong></span>The Owner must nominate the performing Vessel by no later than the time specified in Part I together with a full and complete';
+    var word = '(a)';
+
+    var result = line.split(word);
+    console.log('FINAL', result);
+
+    //=========
+    var str = '<span class="fmg-indent-1"><strong>(b)</strong></span>The Charterer may, any time before arrival at port, change the discharge port in consideration for paying freight';
+    
+    
+    var node = $('<div>').html(str);
+    var childNodes = node[0].childNodes;
+
+    var childs = [];
+    for(var i=0; i<childNodes.length; i++) {
+        if(childNodes[i].nodeName != '#text') {
+            childs.push(childNodes[i].outerHTML)
+        } else {
+            childs.push(...childNodes[i].textContent.split(' '))
+        }
+    }
+
+    //console.log('FINEL', childs);
+
+    //=========
+
+    function splitHtml(html) {
+        var html = '<a><strong>Hello ##world </strong></a><a>prabu</a>';
+
+        var html1 = html.split('##');
+
+        console.log('HTML', validateTags(html1[0]));
+        console.log('HTML', validateTags(html1[1]));
+    }
+
+    function validateTags(html) {
+        var div = $('<div></div>');
+        var closeTag = html.match(/<\/[a-z]+>/ig);
+
+        for( var index in closeTag ) {
+            var str = html.match(/<\/[a-z]+>/);
+
+            var close = closeTag[index];
+            var open = close.replace('/', '');
+
+            var temp = html.split( close )[0];
+
+            if( temp.indexOf(open) === -1) {
+                html = open + html;
+            }
+        }
+        div.append(html);
+
+        return div.html();
+    }
+
+    //splitHtml();
+
+    //=========
+
+    Array.prototype.insert = function(i,...rest){
+        this.splice(i,0,...rest);
+        return this
+    }
+
+
+    //===========
+
+    var rawLine = "in such dock or at such wharf or place (where she may safely lie, always afloat, at all times of tide, except as otherwise provided in clause No. 6), as";//.split(' ');
+    var newLine = [];
+
+
+    function getWordAt(s, pos) {
+      // make pos point to a character of the word
+      while (s[pos] == " ") pos--;
+      // find the space before that word
+      // (add 1 to be at the begining of that word)
+      // (note that it works even if there is no space before that word)
+      pos = s.lastIndexOf(" ", pos) + 1;
+      // find the end of the word
+      var end = s.indexOf(" ", pos);
+      if (end == -1) end = s.length; // set to length if it was the last word
+      
+      // return the result
+      //return s.substring(pos, end);
+
+      //return the result by removeing given index
+      return s.slice(0, pos) + s.slice(end)
+    }
+    //console.log(rawLine);
+    //console.log( getWordAt(rawLine, 40) );
+
+    // var oldLine = "(where she may safely lie, always afloat,".split(' ');
+
+    // for(var i = 0; i<oldLine.length; i++) {
+    //     add(oldLine[i]);
+    // }
+    //remove("in such dock")
+
+    function remove(str) {
+        var s = str.split(' ');
+
+        //rawLine = rawLine.replace(s);
+        s.map( function(word) {
+            rawLine = rawLine.replace(word, '').replace(/\s+/g, ' ');
+            console.log(word, '=' + rawLine);
+        })
+        console.log(rawLine);
+    }
+    
+    
+    // add('such wharf or place');
+    // add('dock');
+    // add('in');
+    // add('in clause No.');
+    // add('such');
+    // add('such');
+    //add(newLine, 'tide,');
+
+    //var temp = newLine.filter(function(n){ return n != undefined });
+    //console.log('newLine:', newLine.join(' '));
+
+    function add(str) {
+         
+        var words = str.split(' ');
+        var startIndex = 0;
+        var newWords = [];
+ 
+        while(startIndex >= 0 && startIndex < rawLine.length) {
+            startIndex = rawLine.indexOf(words[0], startIndex);
+            newWords = rawLine.slice(startIndex, startIndex + words.length);
+
+            //if no word found then cancel
+            if(startIndex < 0) { break; }
+
+            if(_.isEqual(newWords, words)) {
+                var inserted = false;
+                for(var index = 0; index<words.length;index++) {
+                    //insert when its empty
+                    if(!newLine[startIndex+index]) {
+                        inserted = true;
+                        newLine[startIndex+index] = words[index];
+                    }
+                }
+                //to make sure only once inserted
+                if(inserted) { break; }
+            }
+
+            //move to next index
+            startIndex++;
+        }
+              
+        //console.log(newLine);
+        //if(words.length == 2) {
+            //console.log(words);
+            // for(var index = 0; index<rawLine.length; index++) {
+            //     if(rawLine[index] == words[0] && rawLine[index+1] == words[1]) {
+            //         newLine[index] = words[0];
+            //         newLine[index+1] = words[1];
+            //     }
+            // }
+        //} else {
+            //insert single word
+            // for(var index = 0; index<rawLine.length; index++) {
+            //     if(rawLine[index] == word && !newLine[index]) {
+            //         newLine[index] = word;
+            //         break;
+            //     }
+            // }
+        //}
+        
+       
+    }
+
+     // var temp = rawLine.filter(function(n){ return n != undefined });
+     //    console.log('rawLine', temp.join(' '));
+     //    //console.log('newLine:', newLine.join(' '));
+
+     //    var temp = newLine.filter(function(n){ return n != undefined });
+     //    console.log('newLine:', temp.join(' '));
+   
+
+</script>
+
+</body>
+</html> 
