@@ -5,15 +5,13 @@ import { AppComponent } from './app.component';
 import { SearchComponent } from './components/search/search.component';
 import { ListComponent } from './components/list/list.component';
 import { DatastoreService } from './services/datastore.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { CardComponent } from './components/card/card.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
     SearchComponent,
-    ListComponent,
-    CardComponent
+    ListComponent
   ],
   imports: [
     BrowserModule,

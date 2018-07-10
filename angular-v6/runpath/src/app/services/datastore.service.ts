@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Input, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
  
-
 export class SearchPattern {
   public searchKey:string = '';
   public pageLimit:number;
@@ -29,6 +28,7 @@ export class SearchPattern {
 }
 
 
+
 export class ImageItem {
   public id:number;
   public title:string;
@@ -38,32 +38,29 @@ export class ImageItem {
 }
 
 
-module Runpath.Interfaces {
 
+module Runpath.Interfaces {
   export interface IDatastoreService {
     getData():Array<any>;
     searchPattern:SearchPattern;
     updateSearchKey(key):void;
     //ON_READY:EventEmitter<ImageItem>;
-    UPDATE_RESULT:EventEmitter<ImageItem>;
+    UPDATE_RESULT:EventEmitter<Array<ImageItem>>;
   }
 }
+
 
 
 @Injectable()
 export class DatastoreService  implements Runpath.Interfaces.IDatastoreService {
 
   private readonly URL:string = "http://jsonplaceholder.typicode.com/photos";
-
   public searchPattern:SearchPattern
   //public ON_READY:EventEmitter<ImageItem> = new EventEmitter();
-  public UPDATE_RESULT:EventEmitter<any> = new EventEmitter();
-
+  public UPDATE_RESULT:EventEmitter<Array<ImageItem>> = new EventEmitter();
   private dataStore: Array<ImageItem>;
 
-  constructor( private http:HttpClient) { 
-    //this.loadData();
-  }
+  constructor( private http:HttpClient) {}
 
   public getData():Array<ImageItem> {
     return this.dataStore;
@@ -79,7 +76,6 @@ export class DatastoreService  implements Runpath.Interfaces.IDatastoreService {
     this.dataStore = data;
     this.searchPattern = new SearchPattern(data.length, 20, 0);
     this.updateResult();
-
     //this.ON_READY.emit(data);
   }
 
@@ -103,13 +99,10 @@ export class DatastoreService  implements Runpath.Interfaces.IDatastoreService {
         });
       }
 
-      console.log('aa', updatedResult);
       //apply pagination;
       if(updatedResult) {
         updatedResult = updatedResult.slice(this.searchPattern.pageOffset * this.searchPattern.pageLimit, (this.searchPattern.pageOffset + 1) * this.searchPattern.pageLimit);
       }
-      
-      console.log('Updated Result', updatedResult);
 
       this.UPDATE_RESULT.emit(updatedResult);
   }

@@ -1,4 +1,4 @@
-import { DatastoreService } from './../../services/datastore.service';
+import { DatastoreService, ImageItem } from './../../services/datastore.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -21,7 +21,7 @@ export class ListComponent implements OnInit {
     this.dataStore.UPDATE_RESULT.subscribe( this.updateResult.bind(this) );
   }
 
-  private updateResult(result:Array<any>):void {
+  private updateResult(result:Array<ImageItem>):void {
     console.log('FINAL', result);
     this.displayImageList = result;
   }
