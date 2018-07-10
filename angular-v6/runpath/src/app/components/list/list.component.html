@@ -1,0 +1,23 @@
+<div>
+  Result View!
+
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" (click)="navigateList('previous')">Previous</a>
+    </li>
+    <li class="page-item">
+        <a class="page-link" (click)="navigateList('next')">Next</a>
+      </li>
+  </ul>
+
+  <div>Total Result:{{displayImageList.length}} -- {{displayCurrentResult}}</div>
+
+  <div class="row">
+    <div *ngFor="let item of displayImageList" class="col-2">
+        <div class="card " style1="width:400px">
+            <!-- <img class="card-img-top" [src]="item.thumbnailUrl"> -->
+            <div class="card-header">{{item.title}}</div>
+        </div>
+    </div>
+  </div>
+</div>
